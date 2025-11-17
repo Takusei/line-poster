@@ -1,7 +1,5 @@
 import os
 
-from google import genai
-from google.genai import types
 from linebot.v3.messaging import (
     ApiClient,
     Configuration,
@@ -9,13 +7,7 @@ from linebot.v3.messaging import (
 )
 
 from libs.hacker_news import get_top_stories
-
-# ---- Client (Vertex mode; uses project/location like your old code) ----
-client = genai.Client(
-    vertexai=True,
-    project=os.environ.get("PROJECT_ID", "dev-projects-476011"),
-    location="asia-northeast1",
-)
+from libs.vertex import summarize_with_vertex_ai
 
 # --- LINE Configuration ---
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN")
@@ -23,35 +15,6 @@ LINE_CHANNEL_SECRET = os.environ.get("LINE_CHANNEL_SECRET")
 
 # --- Vertex AI Configuration ---
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "dev-projects-476011")
-
-
-def summarize_stories_with_vertex_ai(stories_text):
-    """Summarizes a list of stories using Vertex AI."""
-    if not GOOGLE_CLOUD_PROJECT:
-        print("Error: GOOGLE_CLOUD_PROJECT environment variable not set.")
-        return "Summary is unavailable."
-
-    try:
-        prompt = f"""Please summarize the following list of top 10 Hacker News stories.
-        Provide a brief, engaging overview of the main topics and trends.
-        Keep it concise and suitable for a notification message.
-
-        Stories:
-        {stories_text}
-        """
-
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                # system_instruction=SYSTEM,
-                temperature=0.1,
-            ),
-        )
-        return response.text
-    except Exception as e:
-        print(f"Error generating summary with Vertex AI: {e}")
-        return "Could not generate a summary at this time."
 
 
 def main():
@@ -77,7 +40,7 @@ def main():
     stories_as_text = "\n".join(message_lines)
 
     print("Generating summary with Vertex AI...")
-    summary_message = summarize_stories_with_vertex_ai(stories_as_text)
+    summary_message = summarize_with_vertex_ai(stories_as_text)
 
     print("Prepared message to broadcast:", summary_message)
 

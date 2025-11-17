@@ -1,7 +1,11 @@
 [project]
 name = "line-poster"
 version = "0.1.0"
-description = "Add your description here"
+description = "PoC to send messages to LINE using line-bot-sdk"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "requests",
+    "line-bot-sdk",
+    "ruff>=0.14.5",
+]

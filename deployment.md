@@ -4,9 +4,10 @@ export REGION="asia-northeast1"
 
 export PROJECT_ID="dev-projects-476011"
 
-gcloud secrets create LINE_CHANNEL_ACCESS_TOKEN --replication-policy="automatic" --data-file=- <<< "xxx"
+# Have to use this echo to ignore '\n' in the end
+echo -n "your_secret_here" | gcloud secrets versions add LINE_CHANNEL_ACCESS_TOKEN --replication-policy="automatic" --data-file=-
 
-gcloud secrets create LINE_CHANNEL_SECRET --replication-policy="automatic" --data-file=- <<< "xx"
+echo -n "your_secret_here" | gcloud secrets versions add LINE_CHANNEL_SECRET --replication-policy="automatic" --data-file=-
 
 IMAGE_NAME="${REGION}-docker.pkg.dev/${PROJECT_ID}/line-poster/line-poster:latest"
 

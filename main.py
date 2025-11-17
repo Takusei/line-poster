@@ -2,8 +2,11 @@ import os
 
 from linebot.v3.messaging import (
     ApiClient,
+    ApiException,
+    BroadcastRequest,
     Configuration,
     MessagingApi,
+    TextMessage,
 )
 
 from libs.hacker_news import get_top_stories
@@ -48,14 +51,14 @@ def main():
     api_client = ApiClient(configuration)
     line_bot_api = MessagingApi(api_client)
 
-    # try:
-    #     broadcast_request = BroadcastRequest(
-    #         messages=[TextMessage(text=summary_message)]
-    #     )
-    #     line_bot_api.broadcast(broadcast_request)
-    #     print("Successfully broadcasted summary to LINE.")
-    # except ApiException as e:
-    #     print(f"Error sending message to LINE: {e.body}")
+    try:
+        broadcast_request = BroadcastRequest(
+            messages=[TextMessage(text=summary_message)]
+        )
+        line_bot_api.broadcast(broadcast_request)
+        print("Successfully broadcasted summary to LINE.")
+    except ApiException as e:
+        print(f"Error sending message to LINE: {e.body}")
 
 
 if __name__ == "__main__":

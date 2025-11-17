@@ -18,11 +18,14 @@ def summarize_with_vertex_ai(stories_text):
     """Summarizes a list of stories using Vertex AI."""
     client = get_vertex_ai_client()
 
-    prompt = f"""Please summarize the following list of top 10 Hacker News stories.
-    Provide a brief, engaging overview of the main topics and trends.
-    Keep it concise and suitable for a notification message.
-
-    Stories:
+    prompt = f"""Summarize these Hacker News links in a LINE-friendly message.
+      Use short paragraphs, no markdown, no fluff.
+      Each item should look like:
+      - Title, use '-' at the start of each line
+      - 1–2 sentence summary
+      - Why it matters (1 short sentence)
+      - Keep the tone simple and direct.
+      Here are the stories:
     {stories_text}
     """
 
